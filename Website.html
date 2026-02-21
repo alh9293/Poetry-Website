@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex's Poetry Page</title>
+    <style>
+        /* The page styling for the website */
+        body {
+            background-image: url('castle.png');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+            transition: background 0.6s ease-in-out;
+        }
+
+        /* Changes to the night mode background image */
+        body.night {
+            background-image: url('Dark.jpg');
+        }
+
+        /* Dark overlay to make text easier to read */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            z-index: -1;
+            transition: background 0.6s ease-in-out;
+        }
+
+        /* Darker overlay for Night mode */
+        body.night::before {
+            background: rgba(0,0,40,0.55);
+        }
+
+        /* Poem title box formating */
+        .fixed-box1 {
+            position: fixed;
+            top: 2%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: floralwhite;
+            color: black;
+            padding: 20px 40px;
+            font-size: 20px;
+            font-family: "Lucida Handwriting";
+            border-radius: 8px;
+            z-index: 1000;
+            transition: background 0.6s, color 0.6s;
+        }
+
+        body.night .fixed-box1 {
+            background-color: rgba(80, 40, 120, 0.8);
+            color: white;
+        }
+
+        /* Animation for the text to fit the vibes of the website */
+        @keyframes shimmer {
+            0%, 100% { opacity: 0.6; text-shadow: 0 0 6px #b57bff; }
+            50% { opacity: 1; text-shadow: 0 0 14px #caa3ff, 0 0 22px #8a4fff; }
+        }
+
+        /* Context and favorites formatting */
+        .context-box, .favorites-box {
+            position: fixed;
+            left: 1%;
+            width: 17%;
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(6px);
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            font-family: "Lucida Handwriting";
+            color: white;
+            box-shadow: 0 0 12px rgba(255,255,255,0.3);
+            z-index: 900;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.35) transparent;
+        }
+
+        .context-box { top: 2%; height: 37%; }
+        .favorites-box { top: 45%; height: 40%; }
+
+        /* Formatting the actual poem text */
+        .content {
+            position: fixed;
+            top: 13%;
+            bottom: 1%;
+            left: 35%;
+            right: 35%;
+            overflow-y: auto;
+            text-align: center;
+            font-size: 16px;
+            color: white;
+            font-family: "Lucida Handwriting";
+            line-height: 1.6;
+            padding-bottom: 40px;
+            scrollbar-width: thin;
+        }
+
+        /* Buttons formating */
+        .change-button, .theme-toggle, .submit-box {
+            position: fixed;
+            font-family: "Lucida Handwriting";
+            cursor: pointer;
+            z-index: 1000;
+            border-radius: 12px;
+            transition: transform 0.15s;
+        }
+
+        /* Poem change formatting */
+        .change-button {
+            top: 2%;
+            right: 1%;
+            background-color: rgba(255, 240, 255, 0.85);
+            color: #5a2ea6;
+            border: 2px solid #b57bff;
+            font-size: 26px;
+            padding: 12px 22px;
+            animation: shimmer 2.5s infinite ease-in-out;
+        }
+
+        /* Theme toggle switch for Day/Night */
+        .theme-toggle {
+            bottom: 1%;
+            left: 1%;
+            background-color: rgba(255,255,255,0.7);
+            color: black;
+            border: 2px solid white;
+            font-size: 20px;
+            padding: 10px 18px;
+        }
+
+        body.night .theme-toggle {
+            background-color: rgba(80,40,120,0.8);
+            color: white;
+            border-color: #d8b6ff;
+        }
+
+        /* Submitting button formatting */
+        .submit-box {
+            bottom: 2%;
+            right: 1%;
+            background-color: rgba(150, 90, 255, 0.85);
+            color: white;
+            font-size: 24px;
+            padding: 18px 28px;
+            box-shadow: 0 0 12px rgba(120, 60, 255, 0.7);
+        }
+
+        .change-button:active, .submit-box:active { transform: scale(1.1); }
+
+        /* Star button for hitting your favorite poem/formating */
+        .favorite-btn {
+            position: fixed;
+            top: 1%;
+            left: 80%;
+            font-size: 40px;
+            cursor: pointer;
+            z-index: 1000;
+            color: gold;
+            text-shadow: 0 0 10px gold;
+            transition: opacity 0.3s;
+        }
+
+        .favorite-btn.inactive {
+            color: white;
+            text-shadow: none;
+            opacity: 0.5;
+        }
+
+        /* Me trying to figure out how to make the scrollbar fit the vibes */
+        ::-webkit-scrollbar{
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track{
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.25);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.45);
+        }
+        .context-box, .favorites-box, .content {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.35) transparent;
+        }
+        body.night ::-webkit-scrollbar-thumb {
+            background: rgba(200,160,255,0.35);
+        }
+        body.night .context-box, body.night .favorites-box, body.night .content {
+            scrollbar-color: rgba(200,160,255,0.4) transparent;
+        }
+
+        /* Formatting for less than full screen */
+        @media (max-width: 1100px) {
+            body {
+                overflow: hidden;
+                position: relative;
+            }
+            .context-box {
+                width: 100px;
+                height: 30%;
+                top: 1%;
+            }
+            .favorites-box {
+                width: 100px;
+                height: 250px;
+                top: 40%;
+                left: 10px;
+            }
+            .content {
+                left: 20%;
+                right: 2%;
+                top: 10%;
+                font-size: 14px;
+                line-height: 1.5;
+            }
+            .fixed-box1 {
+                left: 60%;
+                top: 4%;
+                font-size: 18px;
+                padding: 14px 28px;
+                width: max-content;
+            }
+            .change-button {
+                top: 1%;
+                font-size: 10px;
+                padding: 10px 18px;
+            }
+            .favorite-btn {
+                top: 1%;
+                left: 60%;
+                font-size: 32px;
+            }
+            .submit-box {
+                top: auto;
+                bottom: 2%;
+                font-size: 20px;
+                padding: 14px 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Button to pick a poem and change themes and the header -->
+<div class="fixed-box1" id="main-title"></div>
+<button id="change-btn" class="change-button">Change Poem</button>
+<button id="theme-toggle" class="theme-toggle">Day Mode</button>
+
+<!-- The submitting button that takes you to a Google Form for new submissions -->
+<div class="submit-box" onclick="window.open('https://forms.gle/gM6NsZEH76NP7Fc67', '_blank')">
+    Submit Here
+</div>
+
+<!-- Table of all available poems with the poem and author name -->
+<div class="context-box">
+    <table id="context-table">
+        <thead>
+        <tr><th>Poem</th><th>Author</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<!-- Favorite poem tracking and top favorite -->
+<div class="favorites-box">
+    <h3>⭐ Favorites</h3>
+    <div id="favorite-btn" class="favorite-btn inactive">⭐</div>
+    <div id="top-favorite">Top Favorite: None yet</div>
+    <ul id="favorites-list"></ul>
+</div>
+
+<!-- Where the poem text appears -->
+<div class="content">
+    <div id="output"></div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        // The poems that can be on the website/ the text file names that can be loaded
+        const poems = [
+            "Reality", "Toxic Love", "Mirror", "Choices", "Her Locked Box",
+            "Dear Father,", "School System", "Childhood Crush",
+            "Stereotypes", "Dear Mom,", "Fatherless"
+        ];
+
+        // Storing all the HTML boxes so that I don't have a bunch of getElementById lookups. Also so I can change them later.
+        const dom = {
+            title: document.getElementById("main-title"),
+            output: document.getElementById('output'),
+            themeBtn: document.getElementById("theme-toggle"),
+            favBtn: document.getElementById("favorite-btn"),
+            favList: document.getElementById("favorites-list"),
+            topFav: document.getElementById("top-favorite"),
+            tableBody: document.querySelector("#context-table tbody")
+        };
+
+        // Picks a random starting poem
+        let currentIndex = Math.floor(Math.random() * poems.length);
+
+        // Looking at if someone liked any of the poems before
+        const getStorage = () => JSON.parse(localStorage.getItem("favoritesData")) || { favorites: {}, timestamp: Date.now() };
+
+        let state = getStorage();
+        const ONE_DAY = 24 * 60 * 60 * 1000;
+
+        // Resets the likes if it is past a day if I did my math right
+        if (Date.now() - state.timestamp > ONE_DAY) {
+            state = { favorites: {}, timestamp: Date.now() };
+            localStorage.setItem("favoritesData", JSON.stringify(state));
+        }
+
+        /**
+         * Changes the Favorites text and star color
+         */
+        function updateUI() {
+            // sorts the favorites so that the one with the most likes is at the top
+            const entries = Object.entries(state.favorites).sort((a, b) => b[1] - a[1]);
+
+            // Draws the list of liked poems
+            dom.favList.innerHTML = entries.map(([p, c]) => `<li>${p} — ${c} ❤️</li>`).join('');
+            // Shows the poem that has the most likes
+            dom.topFav.textContent = entries.length ? `Top Favorite: ${entries[0][0]} (${entries[0][1]} ❤️)` : "Top Favorite: None yet";
+
+            // Makes it so the star glows if you like the current poem
+            const currentPoem = poems[currentIndex];
+            dom.favBtn.classList.toggle("active", !!state.favorites[currentPoem]);
+            dom.favBtn.classList.toggle("inactive", !state.favorites[currentPoem]);
+        }
+
+        /**
+         * Goes and gets the text file and puts the words on the website
+         */
+        async function loadPoem() {
+            const name = poems[currentIndex];
+            dom.title.textContent = name;
+            dom.output.innerHTML = "";
+            try {
+                // ask the server for the text file
+                const response = await fetch(name);
+                const text = await response.text();
+                // Turns every line of text into a paragraph
+                dom.output.innerHTML = text.split(/\r?\n/).map(line => `<p>${line}</p>`).join('');
+            } catch {
+                // Just in case a file isn't there or if I misspell something (Which I did when I was writing this comment)
+                dom.output.innerHTML = "<p>(Poem file not found)</p>";
+            }
+            updateUI();
+        }
+
+        /**
+         * Looks through all the poems to see who wrote them which is on the last line of the files
+         */
+        async function initTable() {
+            const rows = await Promise.all(poems.map(async file => {
+                try {
+                    const res = await fetch(file);
+                    const text = await res.text();
+                    // Finds the very last line to see the Author's name
+                    const lastLine = text.trim().split(/\r?\n/).pop();
+                    const author = lastLine.startsWith("Author:") ? lastLine.replace("Author:", "").trim() : "Unknown";
+                    return `<tr><td>${file}</td><td>${author}</td></tr>`;
+                } catch { return ""; } // Same thing in case formatting is wrong
+            }));
+            // Puts all that information into the content table all at once.
+            dom.tableBody.innerHTML = rows.join('');
+        }
+
+        // This makes it so that when you hit the change button you get a different poem then the previous one you are looking at
+        document.getElementById("change-btn").addEventListener("click", () => {
+            let next;
+            do { next = Math.floor(Math.random() * poems.length); } while (next === currentIndex);
+            currentIndex = next;
+            loadPoem();
+        });
+
+        // This is the switching of the day and night mode of the website
+        dom.themeBtn.addEventListener("click", () => {
+            const isNight = document.body.classList.toggle("night");
+            dom.themeBtn.textContent = isNight ? "Night Mode" : "Day Mode";
+        });
+
+        // Adding 1 to the heart count and saving it to the browser's memory
+        dom.favBtn.addEventListener("click", () => {
+            const p = poems[currentIndex];
+            state.favorites[p] = (state.favorites[p] || 0) + 1;
+            state.timestamp = Date.now();
+            localStorage.setItem("favoritesData", JSON.stringify(state));
+            updateUI();
+        });
+
+        initTable();
+        loadPoem();
+    });
+</script>
+</body>
+</html>
